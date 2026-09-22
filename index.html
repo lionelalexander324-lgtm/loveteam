@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffe5ef">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Team Up for Love</title>
+<link rel="preload" as="image" href="assets/hero-team-up-v20260922.webp" fetchpriority="high">
+<style>
+:root{
+  --rose:#ff5f91;
+  --rose-2:#ff82aa;
+  --rose-3:#c84678;
+  --rose-4:#9e4a6d;
+  --peach:#ffd9df;
+  --cream:#fff9fb;
+  --card:#fffdfd;
+  --gold:#ffb52e;
+  --gold-2:#ffcf66;
+  --ink:#5f3f4d;
+  --muted:#9b7485;
+  --line:rgba(206,88,134,.16);
+  --shadow:0 16px 42px rgba(174,65,111,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#fff6fa}
+body{
+  margin:0;
+  min-width:320px;
+  background:
+    radial-gradient(circle at 6% 12%,rgba(255,255,255,.95) 0 8%,transparent 9%),
+    radial-gradient(circle at 94% 20%,rgba(255,228,238,.85) 0 13%,transparent 14%),
+    linear-gradient(180deg,#fff7fb 0%,#ffe9f1 42%,#fff8fb 100%);
+  color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+a{color:inherit}
+img,video{display:block;max-width:100%}
+button,a{-webkit-tap-highlight-color:transparent}
+
+/* ---------- opening game-like intro ---------- */
+#intro{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#fff4f8 0%,#ffe2ed 56%,#f8ccdf 100%);
+  overflow:hidden;
+  transition:opacity .48s ease,visibility .48s ease;
+}
+#intro.hide{opacity:0;visibility:hidden;pointer-events:none}
+.intro-scene{
+  position:relative;width:100%;max-width:560px;height:100vh;height:100dvh;
+  min-height:520px;max-height:980px;overflow:hidden;isolation:isolate;
+}
+.intro-cloud{position:absolute;border-radius:999px;background:rgba(255,255,255,.6);filter:blur(8px)}
+.intro-cloud.c1{width:190px;height:48px;left:-20px;top:19%}
+.intro-cloud.c2{width:240px;height:58px;right:-40px;top:27%}
+.intro-cloud.c3{width:270px;height:72px;left:50%;transform:translateX(-50%);bottom:10%}
+.intro-decor{position:absolute;opacity:.56;animation:introFloat 5s ease-in-out infinite;pointer-events:none}
+.intro-decor.d1{left:9%;top:13%;font-size:22px}.intro-decor.d2{right:11%;top:16%;font-size:28px;animation-delay:.9s}
+.intro-decor.d3{left:18%;bottom:26%;font-size:20px;animation-delay:1.8s}.intro-decor.d4{right:15%;bottom:30%;font-size:18px;animation-delay:.5s}
+.intro-message{
+  position:absolute;top:max(6%,calc(env(safe-area-inset-top) + 18px));left:50%;
+  transform:translateX(-50%) translateY(-8px);width:min(88%,540px);text-align:center;z-index:4;
+  opacity:0;transition:.45s ease;
+}
+.intro-message.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.intro-message-pill{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;
+  max-width:100%;padding:10px 15px;border-radius:999px;background:rgba(255,255,255,.88);
+  color:#a94f73;font-size:clamp(12px,3.6vw,14px);line-height:1.2;font-weight:850;
+  box-shadow:0 12px 28px rgba(196,83,130,.12);
+}
+.team-join{
+  position:absolute;top:19%;left:50%;transform:translateX(-50%);width:min(88%,460px);
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;z-index:4;
+}
+.partner-chip{
+  border-radius:20px;background:rgba(255,255,255,.88);padding:14px;display:flex;align-items:center;
+  justify-content:center;gap:8px;font-weight:900;color:#a94f73;box-shadow:0 14px 28px rgba(196,83,130,.12);
+  opacity:0;transform:translateY(12px) scale(.96);transition:.5s ease;min-width:0;
+  font-size:clamp(12px,3.5vw,15px);white-space:nowrap;
+}
+.partner-chip.show{opacity:1;transform:translateY(0) scale(1)}
+.intro-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(180deg,#ff9fc2,#ff6fa5);font-size:18px}
+.join-plus{font-size:28px;font-weight:950;color:#ff6e9f;opacity:0;transform:scale(.6);transition:.4s ease}.join-plus.show{opacity:1;transform:scale(1)}
+.target-level{
+  position:absolute;top:31%;left:50%;transform:translateX(-50%) scale(.9);z-index:4;
+  padding:12px 18px;border-radius:18px;background:linear-gradient(180deg,#ff91b8,#ff6397);
+  color:white;font-weight:950;box-shadow:0 18px 34px rgba(255,95,149,.26);opacity:0;transition:.5s ease;
+}
+.target-level.show{opacity:1;transform:translateX(-50%) scale(1)}
+.target-level small{display:block;font-size:11px;font-weight:750;opacity:.9;text-align:center;letter-spacing:.3px}
+.target-level strong{display:block;font-size:28px;line-height:1.05;text-align:center}
+.intro-road{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);width:min(92%,500px);z-index:4}
+.stage-row{display:flex;justify-content:space-between;align-items:flex-end;padding:0 7px 11px;color:#bd7191;font-size:clamp(10px,2.8vw,12px);font-weight:850}
+.stage{width:16.2%;text-align:center;opacity:.5;transition:.25s ease}.stage.active{opacity:1;color:#9e496c;transform:translateY(-2px)}
+.flag{display:block;font-size:20px;margin-bottom:2px}
+.track-wrap{position:relative;padding:14px 10px 18px;border-radius:28px;background:rgba(255,255,255,.76);box-shadow:0 18px 42px rgba(196,83,130,.14);backdrop-filter:blur(6px)}
+.track{position:relative;height:24px;border-radius:999px;background:linear-gradient(180deg,#ffd0e1,#f8aec9);box-shadow:inset 0 2px 7px rgba(255,255,255,.85),inset 0 -2px 7px rgba(201,89,136,.1)}
+.track::after{content:"";position:absolute;inset:4px;border-radius:999px;background:rgba(255,255,255,.38)}
+.track-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:999px;background:linear-gradient(90deg,#ff88b0,#ff5f95 58%,#ff4d88);box-shadow:0 0 16px rgba(255,95,149,.35);z-index:1}
+.markers{position:absolute;left:10px;right:10px;top:-7px;height:38px;display:flex;justify-content:space-between;pointer-events:none}
+.dot{width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid #ff96ba;margin-top:12px;box-shadow:0 3px 8px rgba(255,95,149,.13)}
+.intro-car{position:absolute;top:-38px;left:0;width:74px;height:42px;z-index:3;filter:drop-shadow(0 10px 14px rgba(196,83,130,.22));will-change:left,transform}
+.intro-car svg{width:100%;height:100%;display:block}.car-inner{animation:carBounce .65s ease-in-out infinite}
+.finish-burst{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);width:220px;height:220px;pointer-events:none;z-index:6;opacity:0}.finish-burst.show{opacity:1}
+.particle{position:absolute;left:50%;top:50%;opacity:0;font-size:22px}
+.done-tip{position:absolute;bottom:7%;left:50%;transform:translateX(-50%) translateY(10px);opacity:0;z-index:7;font-size:13px;font-weight:800;color:#a35b79;transition:.35s ease}.done-tip.show{opacity:.85;transform:translateX(-50%) translateY(0)}
+@keyframes introFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+@keyframes carBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes p1{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.8)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(-90px,-70px) scale(1.1)}}
+@keyframes p2{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.8)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(92px,-65px) scale(1.1)}}
+@keyframes p3{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.8)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(-24px,-118px) scale(1.15)}}
+@keyframes p4{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.8)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(98px,12px) scale(1.08)}}
+@keyframes p5{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.8)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(-96px,8px) scale(1.08)}}
+@keyframes p6{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.8)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(24px,-128px) scale(1.15)}}
+
+/* ---------- page ---------- */
+.page-shell{width:min(100%,760px);margin:0 auto;padding-bottom:calc(30px + env(safe-area-inset-bottom));}
+.hero{
+  position:relative;overflow:hidden;background:#ffdce8;
+  border-radius:0 0 26px 26px;box-shadow:0 14px 34px rgba(172,64,108,.12);
+}
+.hero img{width:100%;height:auto;aspect-ratio:3/1;object-fit:cover}
+.time-row{display:flex;justify-content:center;padding:18px 16px 4px}
+.time-pill{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;
+  background:linear-gradient(180deg,#fff,#fff5f9);border:1px solid rgba(224,107,150,.22);
+  color:#a3476b;font-size:14px;font-weight:850;box-shadow:0 10px 24px rgba(180,68,112,.11);
+}
+.content{padding:14px 14px 0}
+.section{
+  position:relative;background:rgba(255,253,253,.94);border:1px solid rgba(225,119,158,.18);
+  border-radius:25px;padding:20px 18px;margin:0 0 16px;box-shadow:var(--shadow);overflow:hidden;
+}
+.section::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:4px;
+  background:linear-gradient(90deg,transparent,#ff8ab1 18%,#ffbfd2 50%,#ff8ab1 82%,transparent);
+  opacity:.78;
+}
+.section::after{
+  content:"❤";position:absolute;right:14px;top:8px;color:#ffd0df;font-size:42px;line-height:1;transform:rotate(12deg);z-index:0;
+}
+.section > *{position:relative;z-index:1}
+.section-title{margin:0 0 15px;font-size:20px;line-height:1.25;color:#9f4067;font-weight:900;letter-spacing:.1px}
+.info-list{display:grid;gap:11px;margin:0 0 16px;padding:0;list-style:none}
+.info-list li{position:relative;padding-left:18px;font-size:15px;line-height:1.6;color:#654654}
+.info-list li::before{content:"•";position:absolute;left:2px;top:0;color:#ff6d9d;font-size:20px;font-weight:900}
+strong{font-weight:900;color:#8f3f61}
+.example-box{margin-top:6px;padding:15px;border-radius:19px;background:linear-gradient(180deg,#fff4f8,#fff9fb);border:1px solid rgba(230,126,166,.19)}
+.example-pill{display:inline-flex;padding:6px 12px;margin-bottom:9px;border-radius:999px;background:linear-gradient(135deg,#ff7aa7,#ff5c91);color:#fff;font-size:12px;font-weight:900;letter-spacing:.2px;box-shadow:0 7px 16px rgba(255,93,145,.22)}
+.example-line{font-size:15px;line-height:1.55;color:#694b57}.challenge-done{margin-top:4px;color:#9c4265;font-weight:900}
+.example-image-wrap{margin-top:14px;border-radius:19px;overflow:hidden;border:1px solid rgba(229,124,163,.18);background:#fff;box-shadow:0 10px 26px rgba(174,65,111,.08)}
+.example-image-wrap img{width:100%;height:auto}
+.reward-intro{font-size:15px;line-height:1.55;margin:0 0 12px;color:#654654}
+.coin-highlight{
+  display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin:10px 0 13px;padding:13px 16px;
+  border-radius:19px;background:linear-gradient(135deg,#fff4cd 0%,#ffe49a 48%,#fff6d9 100%);
+  border:1px solid rgba(241,179,47,.3);color:#cc7a00;font-size:22px;font-weight:950;
+  box-shadow:0 9px 24px rgba(244,180,45,.18), inset 0 1px 0 rgba(255,255,255,.8);
+  animation:coinGlow 2s ease-in-out infinite;
+}
+@keyframes coinGlow{0%,100%{transform:scale(1);box-shadow:0 9px 24px rgba(244,180,45,.18)}50%{transform:scale(1.012);box-shadow:0 11px 30px rgba(244,180,45,.29)}}
+.reward-top-stack{display:grid;gap:9px;margin:10px 0 12px}
+.flyer-line{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 13px;border-radius:16px;background:linear-gradient(180deg,#fff1f7,#fff9fb);color:#9b4265;font-size:15px;font-weight:900;border:1px solid rgba(225,120,159,.16)}
+.set-group{padding:10px;border-radius:21px;background:linear-gradient(180deg,rgba(255,247,251,.96),rgba(255,255,255,.98));border:1px solid rgba(225,120,159,.16);box-shadow:0 10px 24px rgba(174,65,111,.07)}
+.reward-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:stretch}
+.reward-card{min-width:0;display:flex;flex-direction:column;border-radius:16px;background:#fff;border:1px solid rgba(225,120,159,.18);padding:6px;box-shadow:0 7px 16px rgba(174,65,111,.07);overflow:hidden}
+.media-frame{position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#ffe9f1,#fbd2e2)}
+.media-frame img,.media-frame video{display:block;width:100%;height:100%;object-fit:contain;background:#ffe9f1}
+.reward-label{display:flex;align-items:center;justify-content:center;min-height:34px;text-align:center;font-size:clamp(10px,2.8vw,12px);line-height:1.18;font-weight:900;color:#984464;padding:7px 2px 1px;white-space:normal}
+.video-badge{position:absolute;right:5px;bottom:5px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.9);color:#d44e80;font-size:10px;box-shadow:0 4px 10px rgba(120,40,72,.13);pointer-events:none;transition:.2s ease}
+.video-badge.is-playing{opacity:0;transform:scale(.78)}
+.set-summary{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 0 9px;padding:10px 8px;border-radius:14px;background:linear-gradient(135deg,#ffe6ef,#fff4f8);border:1px solid rgba(225,120,159,.2);color:#934464;font-size:14px;line-height:1.25;font-weight:950;text-align:center}
+.set-summary b{color:#b94a74}
+
+.cta-section{text-align:center;padding:23px 18px 25px}
+.cta-lead{margin:0 0 6px;font-size:20px;font-weight:950;color:#9f4067}
+.cta-copy{margin:0 0 16px;font-size:15px;line-height:1.55;color:#765365}
+.primary-btn{
+  position:relative;display:flex;align-items:center;justify-content:center;width:min(100%,430px);margin:0 auto;
+  min-height:54px;border-radius:999px;text-decoration:none;color:#fff;font-size:17px;font-weight:950;letter-spacing:.15px;
+  background:linear-gradient(110deg,#ff6f9f,#ff4f89 46%,#ff7daa);box-shadow:0 12px 28px rgba(255,79,137,.3);overflow:hidden;
+  animation:btnPulse 1.85s ease-in-out infinite;
+}
+.primary-btn::after{content:"";position:absolute;top:-50%;left:-30%;width:24%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-22deg);animation:shine 2.35s ease-in-out infinite}
+@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+@keyframes shine{0%{left:-35%}55%,100%{left:125%}}
+.contact{
+  margin:20px 14px 0;padding:18px 15px 4px;border-top:1px dashed rgba(185,78,121,.25);text-align:center;
+}
+.whatsapp-link{
+  position:relative;display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;text-decoration:none;
+  background:rgba(255,255,255,.78);border:1px solid rgba(208,100,143,.2);color:#9a4768;font-size:13px;font-weight:850;
+  box-shadow:0 8px 18px rgba(174,65,111,.07);
+}
+.whatsapp-link::before{content:"↗";display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#ff77a4;color:white;font-size:12px;animation:linkNudge 1.5s ease-in-out infinite}
+@keyframes linkNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+
+@media(max-width:430px){
+  .hero{border-radius:0 0 22px 22px}
+  .time-row{padding-top:15px}.time-pill{font-size:13px;padding:9px 15px}
+  .content{padding:12px 11px 0}.section{border-radius:22px;padding:18px 15px;margin-bottom:13px}
+  .section-title{font-size:19px;margin-bottom:13px}.info-list li{font-size:14px;line-height:1.55}
+  .example-line{font-size:14px}.reward-intro{font-size:14px}.coin-highlight{font-size:21px;padding:12px}
+  .reward-top-stack{gap:8px;margin:9px 0 11px}.set-group{padding:8px;border-radius:18px}.reward-grid{gap:6px}.reward-card{padding:5px;border-radius:13px}.reward-label{min-height:31px;font-size:10.5px;padding-top:6px}.media-frame{border-radius:10px}
+  .flyer-line{font-size:14px}.set-summary{font-size:13px;padding:9px 6px}.cta-lead{font-size:19px}.cta-copy{font-size:14px}.primary-btn{font-size:16px;min-height:52px}
+  .intro-scene{min-height:500px}.team-join{top:18.5%;width:90%;gap:8px}.target-level{top:31%}.intro-road{top:56.5%;width:94%}
+  .partner-chip{padding:11px 8px}.intro-avatar{width:30px;height:30px;font-size:16px}.join-plus{font-size:24px}
+  .target-level{padding:11px 16px}.target-level strong{font-size:25px}.intro-car{width:66px;top:-35px}.track{height:22px}.dot{width:12px;height:12px;margin-top:11px}
+}
+@media(max-width:350px){
+  .content{padding-left:8px;padding-right:8px}.section{padding-left:12px;padding-right:12px}
+  .set-group{padding:6px}.reward-grid{gap:4px}.reward-card{padding:4px}.reward-label{min-height:29px;font-size:9.5px}.video-badge{width:21px;height:21px;font-size:8px;right:3px;bottom:3px}.set-summary{font-size:12px}
+  .message{width:92%}.team-join{width:92%;gap:6px}.partner-chip{padding:10px 7px;gap:6px}.intro-avatar{width:28px;height:28px;font-size:15px}
+  .intro-road{width:95%}.intro-car{width:62px;top:-33px}
+}
+@media(max-height:650px){.intro-message{top:max(4%,calc(env(safe-area-inset-top) + 10px))}.team-join{top:18%}.target-level{top:30%}.intro-road{top:57%}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}.intro-decor,.car-inner,.coin-highlight,.primary-btn,.primary-btn::after,.whatsapp-link::before{animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- Opening animation -->
+<section id="intro" aria-label="Team Up challenge intro">
+  <div class="intro-scene">
+    <div class="intro-cloud c1"></div><div class="intro-cloud c2"></div><div class="intro-cloud c3"></div>
+    <div class="intro-decor d1">💗</div><div class="intro-decor d2">💕</div><div class="intro-decor d3">💞</div><div class="intro-decor d4">✨</div>
+
+    <div class="intro-message" id="introMessage"><div class="intro-message-pill">💞 Team up and reach <b>Lv.6+</b> together</div></div>
+
+    <div class="team-join">
+      <div class="partner-chip" id="chipA"><span class="intro-avatar">💖</span><span>Partner A</span></div>
+      <div class="join-plus" id="joinPlus">+</div>
+      <div class="partner-chip" id="chipB"><span class="intro-avatar">💘</span><span>Partner B</span></div>
+    </div>
+
+    <div class="target-level" id="targetLevel"><small>COMBINED TEAM LEVEL</small><strong>Lv.6+</strong></div>
+
+    <div class="intro-road">
+      <div class="stage-row">
+        <div class="stage">Lv.1</div><div class="stage">Lv.2</div><div class="stage">Lv.3</div><div class="stage">Lv.4</div><div class="stage">Lv.5</div><div class="stage"><span class="flag">🏁</span>Lv.6</div>
+      </div>
+      <div class="track-wrap">
+        <div class="track" id="track">
+          <div class="track-fill" id="trackFill"></div>
+          <div class="markers"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div class="intro-car" id="introCar" aria-hidden="true">
+            <div class="car-inner">
+              <svg viewBox="0 0 160 88" xmlns="http://www.w3.org/2000/svg">
+                <defs><linearGradient id="carGrad" x1="0" x2="1"><stop offset="0" stop-color="#ff8db6"/><stop offset="1" stop-color="#ff5d94"/></linearGradient></defs>
+                <path d="M18 53h15l10-20c3-7 9-11 17-11h37c9 0 15 4 21 11l14 17h7c9 0 15 7 15 15v3c0 6-5 11-11 11h-11a18 18 0 0 1-35 0H67a18 18 0 0 1-35 0H20C11 79 5 73 5 64c0-7 5-11 13-11Z" fill="url(#carGrad)"/>
+                <path d="M59 28h33c7 0 12 3 17 9l8 10H47l8-15c1-3 2-4 4-4Z" fill="#fff3f8" opacity=".95"/>
+                <path d="M82 29v17" stroke="#f2bdd0" stroke-width="3"/>
+                <circle cx="50" cy="79" r="13" fill="#5a3e4d"/><circle cx="50" cy="79" r="6" fill="#fff"/>
+                <circle cx="114" cy="79" r="13" fill="#5a3e4d"/><circle cx="114" cy="79" r="6" fill="#fff"/>
+                <circle cx="140" cy="57" r="5" fill="#ffd86b"/><circle cx="18" cy="59" r="4" fill="#ffbad0"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finish-burst" id="finishBurst"></div>
+    <div class="done-tip" id="doneTip">Challenge unlocked ✓</div>
+  </div>
+</section>
+
+<main class="page-shell" id="activityPage">
+  <header class="hero">
+    <img src="assets/hero-team-up-v20260922.webp" alt="Team Up for Love" width="1600" height="533" fetchpriority="high" decoding="async">
+  </header>
+
+  <div class="time-row">
+    <div class="time-pill">💗 Event Time: <strong>Sept 25–28</strong></div>
+  </div>
+
+  <div class="content">
+    <section class="section">
+      <h2 class="section-title">💞 Event Info</h2>
+      <ul class="info-list">
+        <li>Team up with your <strong>partner</strong> and complete the <strong>Lucky Gift reward</strong> together!</li>
+        <li>Your two <strong>Lucky Gift reward levels</strong> just need to add up to <strong>Lv.6 or above</strong> to complete the challenge.</li>
+      </ul>
+
+      <div class="example-box">
+        <div class="example-pill">Example</div>
+        <div class="example-line">You reach <strong>Lv.2</strong> + your partner reaches <strong>Lv.4</strong> = <strong>Lv.6</strong></div>
+        <div class="challenge-done">Challenge completed! ✅</div>
+      </div>
+
+      <div class="example-image-wrap">
+        <img src="assets/team-example-v20260922.webp" alt="Lucky Gift reward level example" width="900" height="989" loading="lazy" decoding="async">
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">🎁 Rewards</h2>
+      <p class="reward-intro">Once the challenge is completed, <strong>both of you</strong> will receive:</p>
+
+      <div class="reward-top-stack">
+        <div class="coin-highlight">🪙 <span>3,000 Coins</span></div>
+        <div class="flyer-line">🌟 Exclusive Promotional Flyer</div>
+      </div>
+
+      <div class="set-group">
+        <div class="set-summary">💖 <span>Full True Love Set <b>(15 Days)</b></span></div>
+        <div class="reward-grid">
+          <article class="reward-card">
+            <div class="media-frame">
+              <img src="assets/avatar-frame-v20260922.webp" alt="True Love Avatar Frame" width="408" height="403" loading="lazy" decoding="async">
+            </div>
+            <div class="reward-label">Avatar Frame</div>
+          </article>
+
+          <article class="reward-card">
+            <div class="media-frame">
+              <video class="lazy-video" muted loop playsinline preload="none" poster="assets/seat-poster-v20260922.webp" data-src="assets/seat-frame-v20260922-v2.mp4" aria-label="True Love Seat Frame effect"></video>
+              <div class="video-badge">▶</div>
+            </div>
+            <div class="reward-label">Seat Frame</div>
+          </article>
+
+          <article class="reward-card">
+            <div class="media-frame">
+              <video class="lazy-video" muted loop playsinline preload="none" poster="assets/ride-poster-v20260922.webp" data-src="assets/ride-v20260922-v2.mp4" aria-label="True Love Ride effect"></video>
+              <div class="video-badge">▶</div>
+            </div>
+            <div class="reward-label">Ride</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-section">
+      <p class="cta-lead">💞 Ready to team up for love?</p>
+      <p class="cta-copy">👇 Tap the link below to join the event now!</p>
+      <a class="primary-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSct52ArjF9WKcQ0D7_32yKUXgZz1hQN0bnaUYHsKVypTv51VQ/viewform?usp=header" target="_blank" rel="noopener noreferrer">Partner Up Now!</a>
+    </section>
+  </div>
+
+  <footer class="contact">
+    <a class="whatsapp-link" href="https://wa.me/8618646390081" target="_blank" rel="noopener noreferrer">Questions? Tap Here to Chat on WhatsApp.</a>
+  </footer>
+</main>
+
+<script>
+/* Opening animation */
+(() => {
+  const intro = document.getElementById('intro');
+  const message = document.getElementById('introMessage');
+  const chipA = document.getElementById('chipA');
+  const chipB = document.getElementById('chipB');
+  const joinPlus = document.getElementById('joinPlus');
+  const target = document.getElementById('targetLevel');
+  const fill = document.getElementById('trackFill');
+  const track = document.getElementById('track');
+  const car = document.getElementById('introCar');
+  const burst = document.getElementById('finishBurst');
+  const doneTip = document.getElementById('doneTip');
+  const stages = [...document.querySelectorAll('.stage')];
+  let raf;
+
+  function activateStage(progress){
+    const idx = Math.min(5, Math.max(0, Math.floor(progress / 16.6667)));
+    stages.forEach((s,i)=>s.classList.toggle('active', i<=idx));
+  }
+  function burstFinish(){
+    burst.innerHTML=''; burst.classList.add('show');
+    const anims=['p1','p2','p3','p4','p5','p6'];
+    const symbols=['💗','✨','💞','✨','💕','💖','✨','💗'];
+    symbols.forEach((sym,i)=>{
+      const el=document.createElement('span'); el.className='particle'; el.textContent=sym;
+      el.style.animation=`${anims[i%anims.length]} 1s ease-out forwards`;
+      burst.appendChild(el);
+    });
+  }
+  function drive(){
+    const duration=2350, start=performance.now();
+    const maxLeft=Math.max(0, track.clientWidth-car.offsetWidth+7);
+    function step(t){
+      const p=Math.min(1,(t-start)/duration);
+      const ease=1-Math.pow(1-p,2.5);
+      fill.style.width=(ease*100)+'%';
+      car.style.left=(maxLeft*ease)+'px';
+      car.style.transform=`rotate(${Math.sin(t/130)*0.55}deg)`;
+      activateStage(ease*100);
+      if(p<1){raf=requestAnimationFrame(step)}
+      else{
+        burstFinish(); doneTip.classList.add('show');
+        setTimeout(()=>{
+          intro.classList.add('hide');
+          setTimeout(()=>intro.remove(),550);
+        },620);
+      }
+    }
+    raf=requestAnimationFrame(step);
+  }
+
+  setTimeout(()=>message.classList.add('show'),160);
+  setTimeout(()=>{chipA.classList.add('show');chipB.classList.add('show');joinPlus.classList.add('show')},470);
+  setTimeout(()=>target.classList.add('show'),990);
+  setTimeout(drive,1460);
+})();
+
+/* Lazy-load/play the reward videos only when users scroll near them. */
+(() => {
+  const videos=[...document.querySelectorAll('.lazy-video')];
+  const loadVideo=(video)=>{
+    if(video.dataset.loaded) return;
+    video.src=video.dataset.src;
+    video.dataset.loaded='1';
+    const badge=video.parentElement.querySelector('.video-badge');
+    video.addEventListener('playing',()=>badge && badge.classList.add('is-playing'),{once:false});
+    video.addEventListener('pause',()=>badge && badge.classList.remove('is-playing'),{once:false});
+    video.load();
+  };
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        const video=entry.target;
+        if(entry.isIntersecting){
+          loadVideo(video);
+          const p=video.play(); if(p && p.catch) p.catch(()=>{});
+        }else if(video.dataset.loaded){
+          video.pause();
+        }
+      });
+    },{rootMargin:'160px 0px',threshold:.15});
+    videos.forEach(v=>io.observe(v));
+  }else{
+    videos.forEach(v=>{loadVideo(v); v.play().catch(()=>{});});
+  }
+})();
+</script>
+</body>
+</html>
